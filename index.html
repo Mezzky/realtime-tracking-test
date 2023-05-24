@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pembaruan Lokasi Real-Time</title>
+</head>
+
+<body>
+    <h1>Lokasi Real-Time</h1>
+    <button id="activate-location">Aktifkan Lokasi</button>
+    <button id="deactivate-location" disabled>Matikan Lokasi</button>
+    <p id="location-display"></p>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var activateLocationButton = document.getElementById("activate-location");
+            var deactivateLocationButton = document.getElementById("deactivate-location");
+            var locationDisplay = document.getElementById("location-display");
+            var intervalId;
+
+            activateLocationButton.addEventListener("click", function () {
+                activateLocationButton.disabled = true;
+                deactivateLocationButton.disabled = false;
+                startLocationUpdates();
+            });
+
+            deactivateLocationButton.addEventListener("click", function () {
+                activateLocationButton.disabled = false;
+                deactivateLocationButton.disabled = true;
+                stopLocationUpdates();
+            });
+
+            function startLocationUpdates() {
+                intervalId = setInterval(getCurrentLocation, 5000);
+                getCurrentLocation(); // Mengambil lokasi saat tombol "Aktifkan Lokasi" pertama kali diklik
+            }
+
+            function stopLocationUpdates() {
+                clearInterval(intervalId);
+            }
+
+            function getCurrentLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var latitude = position.coords.latitude;
+                        var longitude = position.coords.longitude;
+
+                        locationDisplay.innerHTML = "Latitude: " + latitude + "<br>Longitude: " +
+                            longitude;
+                    }, function (error) {
+                        console.error("Kesalahan dalam mengakses lokasi:", error);
+                    });
+                } else {
+                    console.error("Browser tidak mendukung Geolocation API");
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
